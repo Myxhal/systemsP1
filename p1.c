@@ -1,2 +1,4 @@
 #include <stdlib.h>
-
+main(){
+    
+}
