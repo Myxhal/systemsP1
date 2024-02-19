@@ -1,3 +1,6 @@
+#include "stdlib.h"
+
+#include "mymalloc.h"
 #define MEMLENGTH 512
 static double memory[MEMLENGTH];
 struct chunkHeader{
@@ -8,7 +11,7 @@ void initializeMallocArray(){
     //actually create an array
     //Create the first chunk header
 }
-void * mymalloc(){    
+void * mymalloc(size_t size, char *file, int line){    
     initializeMallocArray();
     //Read the first chunk header which starts at memory[0] (Should always be there because we called initialize)
     //If the chunk header indicates that the chunk is allocated OR too small move to the next chunk header.
@@ -17,14 +20,26 @@ void * mymalloc(){
     //Once we find a suitable chunk indicate that it is now allocated its chunk header and return a pointer to the chunk
 
 }
-void myfree(void *chunkPointer){
-    if (!chunkPointer){return;} //If the pointer is null just return
+void myfree(void *ptr, char *file, int line){
+    initializeMallocArray();
+    if (!ptr){
+        printf("free: null pointer (%c:%d)", file, line);
+        return;
+    } //If the pointer is null 
+        
+    if (ptr<&memory[1]||ptr >&memory[499]){
+        printf("free: invalid pointer (%c:%d)", file, line);
+        return;
+    }//If the pointer doesn't point to somewhere in the array.
+    struct chunkHeader *currentChunkHeader =  ptr - sizeof(struct chunkHeader);//Finds the location of the chunk header of the given chunk
+    if (currentChunkHeader->allocated==0){
+        printf("free: double free (%c :%d)", file, line);
+        return;
+    }//If the chunk isn't allocated
 
-    struct chunkHeader *currentChunkHeader =  chunkPointer - sizeof(struct chunkHeader);//Finds the location of the chunk header of the given chunk
-    currentChunkHeader->allocated=0; //If there isn't a chunkheader there because we were given a bad pointer I'm not really sure what will happen
+    currentChunkHeader->allocated=0;
 
-    //We should be able to subtract 16 bytes from the pointer and find a chunk header.
-    //      If we don't find a chunk header there I think we can return a header
-    //If we do find a chunk header then indicate that it is now unallocated.
-    //      I'm not sure if we have to do anything to the data like delete it or set it to zeros or something
+//I'm not sure how to check whether or not a pointer is in the middle of a chunk without directly accessing the memory which isn't allowed.
+
+
 }
