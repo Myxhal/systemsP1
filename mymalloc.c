@@ -17,7 +17,12 @@ void * mymalloc(){
     //Once we find a suitable chunk indicate that it is now allocated its chunk header and return a pointer to the chunk
 
 }
-void myfree(){
+void myfree(void *chunkPointer){
+    if (!chunkPointer){return;} //If the pointer is null just return
+
+    struct chunkHeader *currentChunkHeader =  chunkPointer - sizeof(struct chunkHeader);//Finds the location of the chunk header of the given chunk
+    currentChunkHeader->allocated=0; //If there isn't a chunkheader there because we were given a bad pointer I'm not really sure what will happen
+
     //We should be able to subtract 16 bytes from the pointer and find a chunk header.
     //      If we don't find a chunk header there I think we can return a header
     //If we do find a chunk header then indicate that it is now unallocated.

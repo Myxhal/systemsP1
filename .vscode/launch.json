@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/Sebe/Documents/sysprogam",
-      "program": "c:/Users/Sebe/Documents/sysprogam/build/Debug/outDebug",
+      "cwd": "c:/Users/Sebe/Documents/Coding/systprogram/systemsP1",
+      "program": "c:/Users/Sebe/Documents/Coding/systprogram/systemsP1/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
