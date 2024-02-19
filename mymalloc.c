@@ -10,6 +10,10 @@ struct chunkHeader{
 void initializeMallocArray(){
     //actually create an array
     //Create the first chunk header
+    struct chunkHeader mArr[MEMLENGTH];
+    struct chunkHeader header = {0,0};
+    mArr[0] = header;
+
 }
 void * mymalloc(size_t size, char *file, int line){    
     initializeMallocArray();
@@ -18,6 +22,37 @@ void * mymalloc(size_t size, char *file, int line){
     //      We can calculate the location of the next chunk header using the size of the next chunk (Which is stored in our current chunk header)
     // Not sure what is supposed to happen if there is no chunks with enough space
     //Once we find a suitable chunk indicate that it is now allocated its chunk header and return a pointer to the chunk
+
+    //loop intilaize 
+    int i = 0;
+    //pointer to array
+    char* ptr = &mArr[i]; 
+    //traverse
+   for(i; i < MEMLENGTH; i++){
+    //check to see if chunk is allocated and if it has enough size
+    if(mArr[i].allocated == 1 || mArr[i].size < size) {
+        continue;
+    }
+    // checks if there is enough size in the unallocated chunk
+    else if (size <= mArr[i]size){
+        myArr[i].allocated = 1;
+        //not sure if this is right
+        //subtract if there is more memory left?
+        mArr[i].size = size;
+        //ptr to chunk 
+        ptr = &mArr[i];
+        
+        return ptr;
+        
+    }
+    else{
+        return printf("There is not enough memory for size %d", size);
+
+    }
+
+   }
+
+
 
 }
 void myfree(void *ptr, char *file, int line){
