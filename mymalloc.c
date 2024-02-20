@@ -20,6 +20,14 @@ void initializeMallocArray(){
         firstChunkHeader.prevChunkHeader = NULL;
         *((ChunkHeader *)&memory[1]) = firstChunkHeader;
 }
+
+
+
+
+
+
+
+
     //actually create an array
     //Create the first chunk header
 struct ChunkHeader mArr[MEMLENGTH]; // I don't think we are allowed to do this since the metadata for the storage array has to also be in the storage array
@@ -32,6 +40,12 @@ size_t round_up(size_t size) {
     return (size + 7) & ~7;
 }
 void * mymalloc(size_t size, char *file, int line){    //I changed the function definition so that it aligns with the way they are defined in mymalloc.h the file and line are used for error messages
+    if(size <= 0){
+        fprintf(stderr, "Error at %s%d: Cannot allocate memory of size 
+    less than or equal to 0\n", file, line);
+            return NULL;
+    }
+   
     initializeMallocArray();
     size = round_up(size);
     //Read the first chunk header which starts at memory[0] (Should always be there because we called initialize)
