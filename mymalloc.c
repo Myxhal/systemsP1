@@ -7,7 +7,7 @@ static double memory[MEMLENGTH];
 typedef struct ChunkHeader{
     size_t size;
     int allocated;
-    double* prevChunkHeader;
+    ChunkHeader* nextChunkHeader;
 }ChunkHeader;
 void initializeMallocArray(){
     //This chunk of code creates the first chunk header IF the test value is not correctly set.
