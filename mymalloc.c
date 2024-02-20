@@ -5,7 +5,7 @@
 #define TESTVALUE 3.5
 static double memory[MEMLENGTH];
 typedef struct ChunkHeader{
-    int size;
+    size_t size;
     int allocated;
     double* prevChunkHeader;
 }ChunkHeader;
@@ -75,6 +75,24 @@ void * mymalloc(size_t size, char *file, int line){    //I changed the function 
 
 
 }
+void coalesce(ChunkHeader *currentChunkHeader){
+    ChunkHeader *previousChunkHeader = currentChunkHeader->prevChunkHeader;
+    ChunkHeader *nextChunkHeader = currentChunkHeader + currentChunkHeader->size;
+    if(previousChunkHeader->allocated==0){//Coalesces previous chunk
+        previousChunkHeader->size= previousChunkHeader->size + sizeof(ChunkHeader) + currentChunkHeader->size; 
+        currentChunkHeader = previousChunkHeader;
+    }
+    if(nextChunkHeader->allocated==0){
+        currentChunkHeader->size = currentChunkHeader->size+ sizeof(ChunkHeader) + nextChunkHeader->size;
+    } 
+}
+bool checkIfAligned(ChunkHeader* currentChunkHeader){
+    int count = 512*8;
+    ChunkHeader* iteratedChunkHeader = memory[0];
+    while (count > 0){
+        if
+    } 
+}
 void myfree(void *ptr, char *file, int line){
     initializeMallocArray();
     if (!ptr){
@@ -87,6 +105,7 @@ void myfree(void *ptr, char *file, int line){
         return;
     }//If the pointer doesn't point to somewhere in the array.
     ChunkHeader *currentChunkHeader =  ptr - sizeof(ChunkHeader);//Finds the location of the chunk header of the given chunk
+    bool alignedBool = checkIfAligned(currentChunkHeader);
     if (currentChunkHeader->allocated==0){
         printf("free: double free (%s :%d)", file, line);
         return;
@@ -99,17 +118,6 @@ void myfree(void *ptr, char *file, int line){
 
 }
 
-void coalesce(ChunkHeader *currentChunkHeader){
-    ChunkHeader *previousChunkHeader = currentChunkHeader->prevChunkHeader;
-    ChunkHeader *nextChunkHeader = currentChunkHeader + currentChunkHeader->size;
-    if(previousChunkHeader->allocated==0){//Coalesces previous chunk
-        previousChunkHeader->size= previousChunkHeader->size + sizeof(ChunkHeader) + currentChunkHeader->size; 
-        currentChunkHeader = previousChunkHeader;
-    }
-    if(nextChunkHeader->allocated==0){
-        currentChunkHeader->size = currentChunkHeader->size+ sizeof(ChunkHeader) + nextChunkHeader->size;
-    } 
-}
 int main(int argc, char **argv)
 {
     printf("%d", round_up(17));
