@@ -36,7 +36,7 @@ size_t round_up(size_t size) {
 
 
 ChunkHeader* find_free_chunk(size_t size){
-    ChunkHeader* current = (ChunkHeader*)((char*)memory[1]);
+    ChunkHeader* current = (ChunkHeader*)((char*) &memory[1]);
     while(current != NULL && !(current->allocated && current->size >= size)){
         current = current->nextChunkHeader;
     }
