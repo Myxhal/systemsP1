@@ -7,7 +7,7 @@ static double memory[MEMLENGTH];
 typedef struct ChunkHeader{
     size_t size;
     int allocated;
-    ChunkHeader* nextChunkHeader;
+    struct ChunkHeader* nextChunkHeader;
 }ChunkHeader;
 void initializeMallocArray(){
     //This chunk of code creates the first chunk header IF the test value is not correctly set.
@@ -44,8 +44,9 @@ size_t round_up(size_t size) {
 ChunkHeader* find_free_chunk(size_t size){
     ChunkHeader* current = head;
     while(current != NULL && !(current->allocated && current->size >= size)){
-        current = current
+        current = current->nextChunkHeader;
     }
+    return current;
 }
 void * mymalloc(size_t size, char *file, int line){    //I changed the function definition so that it aligns with the way they are defined in mymalloc.h the file and line are used for error messages
     if(size <= 0){
