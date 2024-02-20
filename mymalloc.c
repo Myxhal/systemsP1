@@ -39,6 +39,14 @@ struct ChunkHeader mArr[MEMLENGTH]; // I don't think we are allowed to do this s
 size_t round_up(size_t size) {
     return (size + 7) & ~7;
 }
+
+
+ChunkHeader* find_free_chunk(size_t size){
+    ChunkHeader* current = head;
+    while(current != NULL && !(current->allocated && current->size >= size)){
+        current = current
+    }
+}
 void * mymalloc(size_t size, char *file, int line){    //I changed the function definition so that it aligns with the way they are defined in mymalloc.h the file and line are used for error messages
     if(size <= 0){
         fprintf(stderr, "Error at %s%d: Cannot allocate memory of size 
