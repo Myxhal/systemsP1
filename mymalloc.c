@@ -2,6 +2,7 @@
 #include "stdio.h"
 #include "mymalloc.h"
 #define MEMLENGTH 512
+#define TESTVALUE 3.5
 static double memory[MEMLENGTH];
 typedef struct ChunkHeader{
     int size;
@@ -9,22 +10,40 @@ typedef struct ChunkHeader{
     double* prevChunkHeader;
 }ChunkHeader;
 void initializeMallocArray(){
+    //This chunk of code creates the first chunk header IF the test value is not correctly set.
+    // I think we are allowed to do this because 
+    if (memory[0] != TESTVALUE){
+        memory[0] = TESTVALUE;
+        ChunkHeader firstChunkHeader;
+        firstChunkHeader.size = 509*8; //512 - 1 (For the TESTVALUE) - 2 (For the first Chunk Header)
+        firstChunkHeader.allocated = 0;
+        firstChunkHeader.prevChunkHeader = NULL;
+        *((ChunkHeader *)&memory[1]) = firstChunkHeader;
+}
     //actually create an array
     //Create the first chunk header
-    struct chunkHeader mArr[MEMLENGTH];
-    struct chunkHeader header = {0,0};
+struct ChunkHeader mArr[MEMLENGTH]; // I don't think we are allowed to do this since the metadata for the storage array has to also be in the storage array
+    struct ChunkHeader header = {0,0};
     mArr[0] = header;
 
 }
+
+size_t round_up(size_t size) {
+    return (size + 7) & ~7;
+}
 void * mymalloc(size_t size, char *file, int line){    //I changed the function definition so that it aligns with the way they are defined in mymalloc.h the file and line are used for error messages
     initializeMallocArray();
+    size = round_up(size);
     //Read the first chunk header which starts at memory[0] (Should always be there because we called initialize)
     //If the chunk header indicates that the chunk is allocated OR too small move to the next chunk header.
     //      We can calculate the location of the next chunk header using the size of the next chunk (Which is stored in our current chunk header)
     // Not sure what is supposed to happen if there is no chunks with enough space
     //Once we find a suitable chunk indicate that it is now allocated its chunk header and return a pointer to the chunk
-
-    //loop intilaize 
+/**
+ * 
+ * 
+ * I was getting errors while compiling because I wanted to test something real quick so I just commented it out for now
+//loop intilaize 
     int i = 0;
     //pointer to array
     char* ptr = &mArr[i]; 
@@ -52,7 +71,7 @@ void * mymalloc(size_t size, char *file, int line){    //I changed the function 
     }
 
    }
-
+**/
 
 
 }
@@ -90,4 +109,8 @@ void coalesce(ChunkHeader *currentChunkHeader){
     if(nextChunkHeader->allocated==0){
         currentChunkHeader->size = currentChunkHeader->size+ sizeof(ChunkHeader) + nextChunkHeader->size;
     } 
+}
+int main(int argc, char **argv)
+{
+    printf("%d", round_up(17));
 }
