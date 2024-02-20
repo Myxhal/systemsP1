@@ -7,7 +7,7 @@ static double memory[MEMLENGTH];
 typedef struct ChunkHeader{
     size_t size;
     int allocated;
-    struct ChunkHeader* nextChunkHeader;
+    ChunkHeader* nextChunkHeader;
 }ChunkHeader;
 void initializeMallocArray(){
     //This chunk of code creates the first chunk header IF the test value is not correctly set.
@@ -102,22 +102,17 @@ void coalesce(){
     ChunkHeader *currentChunkHeader = &memory[1];
     ChunkHeader *nextChunkHeader = currentChunkHeader->nextChunkHeader;
     while(nextChunkHeader!=NULL){
-        if (nextChunkHeader->allocated==0){
-
+        if ((nextChunkHeader->allocated==0) && (currentChunkHeader->allocated==00)){
+            currentChunkHeader->size = currentChunkHeader->size + sizeof(ChunkHeader)+nextChunkHeader->size;
+            currentChunkHeader->nextChunkHeader = nextChunkHeader->nextChunkHeader;
+            nextChunkHeader = currentChunkHeader->nextChunkHeader;
+        }else{
+            currentChunkHeader = nextChunkHeader;
+            nextChunkHeader = nextChunkHeader->nextChunkHeader;
         }
-        currentChunkHeader = nextChunkHeader;
-        nextChunkHeader = nextChunkHeader->nextChunkHeader;
     }
 
-    ChunkHeader *previousChunkHeader = currentChunkHeader->prevChunkHeader;
-    ChunkHeader *nextChunkHeader = currentChunkHeader + currentChunkHeader->size;
-    if(previousChunkHeader->allocated==0){//Coalesces previous chunk
-        previousChunkHeader->size= previousChunkHeader->size + sizeof(ChunkHeader) + currentChunkHeader->size; 
-        currentChunkHeader = previousChunkHeader;
-    }
-    if(nextChunkHeader->allocated==0){
-        currentChunkHeader->size = currentChunkHeader->size+ sizeof(ChunkHeader) + nextChunkHeader->size;
-    } 
+    
 }
 bool checkIfAligned(ChunkHeader* currentChunkHeader){
     int count = 512*8;
