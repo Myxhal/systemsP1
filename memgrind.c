@@ -58,4 +58,25 @@ long testC (int number_of_tests){
     char* storage[120];
     int allocatedNum = 0;
     gettimeofday(&tv_start, NULL)
+    while(number_of_tests != 120){
+        int randNum = (rand() % 2);
+        if(randNum == 0){
+            storage[allocatedNum] = malloc(1);
+            allocatedNum++;
+        }
+        else{
+            if(allocatedNum > 0){
+                free(storage[allocatedNum-1]);
+                allocatedNum--;
+            }
+        }
+    }
+
+    int i = 0;
+    for(i; i<120;i++){
+        free(storage[i]);
+    }
+
+    gettimeofday(&tv_end, NULL);
+    return(tv_end.tv_usec - tv_start.tv_usec);
 }
