@@ -17,7 +17,7 @@ void initializeMallocArray(){
         ChunkHeader firstChunkHeader;
         firstChunkHeader.size = 509*8; //512 - 1 (For the TESTVALUE) - 2 (For the first Chunk Header)
         firstChunkHeader.allocated = 0;
-        firstChunkHeader.next = NULL;
+        firstChunkHeader.nextChunkHeader = NULL;
         *((ChunkHeader *)&memory[1]) = firstChunkHeader;
 }
 
@@ -36,40 +36,43 @@ size_t round_up(size_t size) {
 
 
 ChunkHeader* find_free_chunk(size_t size){
-    ChunkHeader* current = memory[1];
+    ChunkHeader* current = (ChunkHeader*)((char*)memory[1]);
     while(current != NULL && !(current->allocated && current->size >= size)){
         current = current->nextChunkHeader;
     }
     return current;
 }
 void * mymalloc(size_t size, char *file, int line){    //I changed the function definition so that it aligns with the way they are defined in mymalloc.h the file and line are used for error messages
+    initializeMallocArray();
+    size = round_up(size);
     if(size <= 0){
-        fprintf(stderr, "Error at %s%d: Cannot allocate memory of size 
-    less than or equal to 0\n", file, line);
+        fprintf(stderr,"Error at %s%d: Cannot allocate memory of size less than or equal to 0\n", file, line);
             return NULL;
     }
 
-    ChunkHeader* chunk = find_free_chunk(size);
-    if(block != NULL){
-        block -> free = 0;
-        return(void*)(block +1);
+    ChunkHeader* chunkHeader = find_free_chunk(size);
+    if(chunkHeader == NULL){
+        return NULL;
     }
-
-    chunk = (ChunkHeader*)sbrk(size * sizeof(ChunkHeader));
+    chunkHeader -> allocated = 1;
+    return(void*)( chunkHeader +sizeof(ChunkHeader));
+    /**
+     * I have no idea what this does what is sbrk
+     * 
+    chunk = (ChunkHeader*) sbrk(size * sizeof(ChunkHeader));
     if(chunk == (void*) - 1){
         fprintf(stderr, "Error at %s:%d: sbrk failed\n", file, line);
         return NULL;
-d
+
     chunk->size = size;
     chunk->free = 0;
     chunk->nextChunkHeader = memory[0];
 
-
+    
     return(void*)(chunk + 1);
-
+**/
    
-    initializeMallocArray();
-    size = round_up(size);
+    
     //Read the first chunk header which starts at memory[0] (Should always be there because we called initialize)
     //If the chunk header indicates that the chunk is allocated OR too small move to the next chunk header.
     //      We can calculate the location of the next chunk header using the size of the next chunk (Which is stored in our current chunk header)
@@ -128,12 +131,16 @@ void coalesce(){
     
 }
 int checkIfAligned(ChunkHeader* currentChunkHeader){
-    int count = 512*8;
-    ChunkHeader* iteratedChunkHeader = &memory[0];
-    return 1; //temporary
-   // while (count > 0){
-   //     if
-    //} 
+    ChunkHeader* iteratedChunkHeader = &memory[1];
+    while(iteratedChunkHeader->next!=NULL){
+        if(iteratedChunkHeader+sizeof(ChunkHeader)==currentChunkHeader){
+            return 1;
+        }
+        else{
+            iteratedChunkHeader = iteratedChunkHeader->nextChunkHeader;
+        }
+    }
+    return 0; 
 }
 void myfree(void *ptr, char *file, int line){
     initializeMallocArray();
