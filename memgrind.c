@@ -45,7 +45,7 @@ while(i < number_of_tests){
         free(storage[j]);
     }
 
-    gettimeoftheday(&tv_end, NULL);
+    gettimeofday(&tv_end, NULL);
 
 }
 return(tv_end.tv_usec - tv_start.tv_usec);
@@ -53,4 +53,9 @@ return(tv_end.tv_usec - tv_start.tv_usec);
 
 }
 
-
+long testC (int number_of_tests){
+    struct timeval, tv_start, tv_end;
+    char* storage[120];
+    int allocatedNum = 0;
+    gettimeofday(&tv_start, NULL)
+}
