@@ -17,7 +17,7 @@ void initializeMallocArray(){
         ChunkHeader firstChunkHeader;
         firstChunkHeader.size = 509*8; //512 - 1 (For the TESTVALUE) - 2 (For the first Chunk Header)
         firstChunkHeader.allocated = 0;
-        firstChunkHeader.prevChunkHeader = NULL;
+        firstChunkHeader.next = NULL;
         *((ChunkHeader *)&memory[1]) = firstChunkHeader;
 }
 
@@ -97,7 +97,17 @@ void * mymalloc(size_t size, char *file, int line){    //I changed the function 
 
 
 }
-void coalesce(ChunkHeader *currentChunkHeader){
+void coalesce(){
+    ChunkHeader *currentChunkHeader = &memory[1];
+    ChunkHeader *nextChunkHeader = currentChunkHeader->nextChunkHeader;
+    while(nextChunkHeader!=NULL){
+        if (nextChunkHeader->allocated==0){
+
+        }
+        currentChunkHeader = nextChunkHeader;
+        nextChunkHeader = nextChunkHeader->nextChunkHeader;
+    }
+
     ChunkHeader *previousChunkHeader = currentChunkHeader->prevChunkHeader;
     ChunkHeader *nextChunkHeader = currentChunkHeader + currentChunkHeader->size;
     if(previousChunkHeader->allocated==0){//Coalesces previous chunk
