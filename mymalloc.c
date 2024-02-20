@@ -102,10 +102,11 @@ void coalesce(ChunkHeader *currentChunkHeader){
 }
 bool checkIfAligned(ChunkHeader* currentChunkHeader){
     int count = 512*8;
-    ChunkHeader* iteratedChunkHeader = memory[0];
-    while (count > 0){
-        if
-    } 
+    ChunkHeader* iteratedChunkHeader = &memory[0];
+    return true; //temporary
+   // while (count > 0){
+   //     if
+    //} 
 }
 void myfree(void *ptr, char *file, int line){
     initializeMallocArray();
