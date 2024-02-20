@@ -128,10 +128,10 @@ void coalesce(){
 
     
 }
-bool checkIfAligned(ChunkHeader* currentChunkHeader){
+int checkIfAligned(ChunkHeader* currentChunkHeader){
     int count = 512*8;
     ChunkHeader* iteratedChunkHeader = &memory[0];
-    return true; //temporary
+    return 1; //temporary
    // while (count > 0){
    //     if
     //} 
