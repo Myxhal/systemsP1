@@ -22,12 +22,6 @@ void initializeMallocArray(){
 }
 
 
-
-
-
-
-
-
     //actually create an array
     //Create the first chunk header
 struct ChunkHeader mArr[MEMLENGTH]; // I don't think we are allowed to do this since the metadata for the storage array has to also be in the storage array
@@ -42,7 +36,7 @@ size_t round_up(size_t size) {
 
 
 ChunkHeader* find_free_chunk(size_t size){
-    ChunkHeader* current = head;
+    ChunkHeader* current = memory[1];
     while(current != NULL && !(current->allocated && current->size >= size)){
         current = current->nextChunkHeader;
     }
@@ -54,6 +48,26 @@ void * mymalloc(size_t size, char *file, int line){    //I changed the function 
     less than or equal to 0\n", file, line);
             return NULL;
     }
+
+    ChunkHeader* chunk = find_free_chunk(size);
+    if(block != NULL){
+        block -> free = 0;
+        return(void*)(block +1);
+    }
+
+    chunk = (ChunkHeader*)sbrk(size * sizeof(ChunkHeader));
+    if(chunk == (void*) - 1){
+        fprintf(stderr, "Error at %s:%d: sbrk failed\n", file, line);
+        return NULL;
+
+    }
+    chunk->size = size;
+    chunk->free = 0;
+    chunk->nextChunkHeader = memory[0];
+
+
+    return(void*)(block + 1);
+
    
     initializeMallocArray();
     size = round_up(size);
