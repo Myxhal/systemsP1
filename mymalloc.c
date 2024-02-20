@@ -59,14 +59,13 @@ void * mymalloc(size_t size, char *file, int line){    //I changed the function 
     if(chunk == (void*) - 1){
         fprintf(stderr, "Error at %s:%d: sbrk failed\n", file, line);
         return NULL;
-
-    }
+d
     chunk->size = size;
     chunk->free = 0;
     chunk->nextChunkHeader = memory[0];
 
 
-    return(void*)(block + 1);
+    return(void*)(chunk + 1);
 
    
     initializeMallocArray();

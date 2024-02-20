@@ -2,6 +2,23 @@
     "tasks": [
         {
             "type": "cppbuild",
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+            "label": "C/C++: clang build active file",
+            "command": "/usr/bin/clang",
+            "args": [
+                "-fcolor-diagnostics",
+                "-fansi-escape-codes",
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+=======
+>>>>>>> Stashed changes
             "label": "C/C++: gcc.exe build active file",
             "command": "C:/Program Files (x86)/x86_64-8.1.0-release-posix-seh-rt_v6-rev0/mingw64/bin/gcc.exe",
             "args": [
@@ -14,6 +31,10 @@
             ],
             "options": {
                 "cwd": "C:/Program Files (x86)/x86_64-8.1.0-release-posix-seh-rt_v6-rev0/mingw64/bin"
+<<<<<<< Updated upstream
+=======
+>>>>>>> bbec3bd94bd44a4a77bc6bd4f0bad92779517e8c
+>>>>>>> Stashed changes
             },
             "problemMatcher": [
                 "$gcc"
