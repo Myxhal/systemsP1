@@ -27,5 +27,30 @@ long testA (int number_of_tests){
 }
 
 
+//TestB will use malloc() to get 120 1-byte objects and store the pointers in an array then
+//use free() to deallocate the chunks
+
+long testB(int number_of_tests){
+struct timeval, tv_start, tv_end;
+char* storage[120];
+int i = 0;
+gettimeoftheday(&tv_start, NULL);
+while(i < number_of_tests){
+    int j;
+    for(j = 0; j < 120; j++){
+        storage[j] = malloc(1);
+    }
+
+    for (j = 0; j < 120; j++){
+        free(storage[j]);
+    }
+
+    gettimeoftheday(&tv_end, NULL);
+
+}
+return(tv_end.tv_usec - tv_start.tv_usec);
+
+
+}
 
 
