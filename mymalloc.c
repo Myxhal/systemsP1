@@ -146,26 +146,3 @@ void myfree(void *ptr, char *file, int line){
 //I'm not sure how to check whether or not a pointer is in the middle of a chunk without directly accessing the memory which isn't allowed.
 }
 
-int main(int argc, char **argv)
-{
-    double* ptr1 = malloc(576); //Should be 5 lines
-    for (int i = 0; i< 72; i++){
-        ptr1[i] = 1;
-    }
-    double* ptr2 = malloc(816);//Should be 7 lines
-    for (int i = 0; i< 102; i++){
-        ptr2[i] = 2;
-    }
-    free(ptr1);
-    double* ptr3 = malloc(336);//Should be the FIRST 3 lines
-    for (int i = 0; i< 42; i++){
-        ptr3[i] = 3;
-    }
-    
-    for(int i = 0; i < 500; i++){
-        printf("%f  ",memory[i]);
-    }
-    
-    //malloc(-5);
-    //printf("%d", sizeof(ChunkHeader));
-}
