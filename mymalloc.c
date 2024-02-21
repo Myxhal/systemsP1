@@ -88,7 +88,7 @@ void* mymalloc(size_t size, char *file, int line){    //I changed the function d
     return locationOfChunk;
 }
 void coalesce(){
-    ChunkHeader *currentChunkHeader = &memory[1];
+    ChunkHeader *currentChunkHeader = &memory[0];
     ChunkHeader *nextChunkHeader = currentChunkHeader->nextChunkHeader;
     while(nextChunkHeader!=NULL){
         if ((nextChunkHeader->allocated==0) && (currentChunkHeader->allocated==0)){
@@ -104,9 +104,10 @@ void coalesce(){
     
 }
 int checkIfAligned(ChunkHeader* currentChunkHeader){
-    ChunkHeader* iteratedChunkHeader = &memory[1];
+    ChunkHeader* iteratedChunkHeader = &memory[0];
     while(iteratedChunkHeader->nextChunkHeader!=NULL){
-        if(iteratedChunkHeader+sizeof(ChunkHeader)==currentChunkHeader){
+        //char* locationofChunk = (char*)(iteratedChunkHeader)+sizeof(ChunkHeader);
+        if(iteratedChunkHeader==currentChunkHeader){
             return 1;
         }
         else{
@@ -152,6 +153,10 @@ int main(int argc, char **argv)
     ptr[1] = 2.0;
     ptr2[0] = 3.0;
     ptr2[1] = 3.0;
+    free(ptr);
+    double* newptr1 = malloc(16);
+    newptr1[0] = 5.0;
+    newptr1[1] = 6.0;
     for(int i = 0; i < 500; i++){
         printf("%f  ",memory[i]);
     }
