@@ -44,10 +44,9 @@ while(i < number_of_tests){
     for (j = 0; j < 120; j++){
         free(storage[j]);
     }
-
-    gettimeofday(&tv_end, NULL);
-
+i++;
 }
+gettimeofday(&tv_end, NULL);
 return(tv_end.tv_usec - tv_start.tv_usec);
 
 
@@ -142,7 +141,32 @@ long testE(int number_of_tests){
      return(total / workCount);
     }
 
+    int main(int argc, char** argv){
+        int iterations = 50;
+        int count = 0;
 
+        long testA_time[iterations];
+        long testB_time[iterations];
+        long testC_time[iterations];
+        long testD_time[iterations];
+        long testE_time[iterations];
+        while(count < iterations){
+            testA_time[count] = testA(120);
+            testB_time[count] = testB(3);
+            testC_time[count] = testC(1);
+            testD_time[count] = testD(50);
+            testE_time[count] = testE(50);
+            count++;
+
+        }
+
+        printf("Test A time in microseconds: $ld\n", timeAVG(testA_time, iterations));
+        printf("Test B time in microseconds: $ld\n", timeAVG(testA_time, iterations));
+        printf("Test C time in microseconds: $ld\n", timeAVG(testA_time, iterations));
+        printf("Test D time in microseconds: $ld\n", timeAVG(testA_time, iterations));
+        printf("Test E time in microseconds: $ld\n", timeAVG(testA_time, iterations));
+
+    }
 
 
 
