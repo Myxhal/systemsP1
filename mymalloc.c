@@ -22,12 +22,6 @@ void initializeMallocArray(){
 }
 
 
-    //actually create an array
-    //Create the first chunk header
-//struct ChunkHeader mArr[MEMLENGTH]; // I don't think we are allowed to do this since the metadata for the storage array has to also be in the storage array
-  //  struct ChunkHeader header = {0,0};
-    //mArr[0] = header;
-
 }
 
 size_t round_up(size_t size) {
@@ -88,7 +82,7 @@ void* mymalloc(size_t size, char *file, int line){    //I changed the function d
     return locationOfChunk;
 }
 void coalesce(){
-    ChunkHeader *currentChunkHeader = &memory[0];
+    ChunkHeader *currentChunkHeader = (ChunkHeader*)((char*)&memory[0]);
     ChunkHeader *nextChunkHeader = currentChunkHeader->nextChunkHeader;
     while(nextChunkHeader!=NULL){
         if ((nextChunkHeader->allocated==0) && (currentChunkHeader->allocated==0)){
@@ -104,7 +98,7 @@ void coalesce(){
     
 }
 int checkIfAligned(ChunkHeader* currentChunkHeader){
-    ChunkHeader* iteratedChunkHeader = &memory[0];
+    ChunkHeader* iteratedChunkHeader = (ChunkHeader*)((char*)&memory[0]);
     while(iteratedChunkHeader->nextChunkHeader!=NULL){
         //char* locationofChunk = (char*)(iteratedChunkHeader)+sizeof(ChunkHeader);
         if(iteratedChunkHeader==currentChunkHeader){
@@ -129,7 +123,7 @@ void myfree(void *ptr, char *file, int line){
         return;
     }
 
-    ChunkHeader *currentChunkHeader =  (char*)ptr - sizeof(ChunkHeader);//Finds the location of the chunk header of the given chunk
+    ChunkHeader *currentChunkHeader =  (ChunkHeader*)(ptr - sizeof(ChunkHeader));//Finds the location of the chunk header of the given chunk
     int aligned = checkIfAligned(currentChunkHeader);
     if(!aligned){
         printf("free: invalid pointer (%s :%d)\n",file,line);

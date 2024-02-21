@@ -9,20 +9,33 @@
 
 long testA (int number_of_tests){
     //create a timeval for time start and time end
-    struct timeval tv_start, tv_end;
+
+    clock_t start_time, end_time;
+    double elapsed_time;
+    //struct timeval tv_start;
     int i = 0;
     //put current time in time start
-    gettimeofday(&tv_start, NULL);
+    //gettimeofday(&tv_start, NULL);
+    start_time = clock();
     while(i < number_of_tests){
         char* oneByte = malloc(1);
         free(oneByte);
         i++;
-
+        //printf("Iterated\n");
     }
-    gettimeofday(&tv_end, NULL);
-
+    end_time = clock();
+    double result = ((double)(end_time-start_time))/ CLOCKS_PER_SEC*1e6;
+    //struct timeval tv_end;
+    //gettimeofday(&tv_end, NULL);
+    //long result = tv_end.tv_usec - tv_start.tv_usec;
     //returns time in seconds
-    return(tv_end.tv_usec - tv_start.tv_usec);
+    return result;
+
+     // Calculate elapsed time in microseconds
+    //long elapsed_usec = (tv_end.tv_sec - tv_start.tv_sec) * 1000000L + (tv_end.tv_usec - tv_start.tv_usec);
+    
+    // Convert microseconds to seconds and return
+    //return result / 1000000L;
 
 
 }
@@ -57,6 +70,7 @@ long testC (int number_of_tests){
     struct timeval tv_start, tv_end;
     char* storage[120];
     int allocatedNum = 0;
+
     gettimeofday(&tv_start, NULL);
     while(allocatedNum != 120){
         int randNum = (rand() % 2);
@@ -87,6 +101,7 @@ long testD(int number_of_tests){
     char* storage[50];
     int allocatedNum = 0;
     int mallocNum = 0;
+
     gettimeofday(&tv_start, NULL);          
      while (mallocNum != 50) { 
         int randNum = (rand() % 2); 
@@ -145,6 +160,7 @@ long testE(int number_of_tests){
     }
 
     int main(int argc, char** argv){
+      
         int iterations = 50;
         int count = 0;
 
@@ -164,10 +180,11 @@ long testE(int number_of_tests){
         }
 
         printf("Test A time in microseconds: %ld\n", timeAVG(testA_time, iterations));
-        printf("Test B time in microseconds: %ld\n", timeAVG(testA_time, iterations));
-        printf("Test C time in microseconds: %ld\n", timeAVG(testA_time, iterations));
-        printf("Test D time in microseconds: %ld\n", timeAVG(testA_time, iterations));
-        printf("Test E time in microseconds: %ld\n", timeAVG(testA_time, iterations));
+        printf("Test B time in microseconds: %ld\n", timeAVG(testB_time, iterations));
+        printf("Test C time in microseconds: %ld\n", timeAVG(testC_time, iterations));
+        printf("Test D time in microseconds: %ld\n", timeAVG(testD_time, iterations));
+        printf("Test E time in microseconds: %ld\n", timeAVG(testE_time, iterations));
+        
 
     }
 
