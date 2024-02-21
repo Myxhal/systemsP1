@@ -114,24 +114,24 @@ void myfree(void *ptr, char *file, int line){
     initializeMallocArray();
     //If the pointer is null 
     if (!ptr){
-        printf("free: null pointer (%s:%d)\n", file, line);
+        printf(stderr,"free: null pointer (%s:%d)\n", file, line);
         return;
     } 
     //If the pointer doesn't point to somewhere in the array. 
     if ((double*)ptr < &memory[1]||(double*)ptr > &memory[499]){
-        printf("free: invalid pointer (%s:%d)\n", file, line);
+        printf(stderr, "free: invalid pointer (%s:%d)\n", file, line);
         return;
     }
 
     ChunkHeader *currentChunkHeader =  (ChunkHeader*)(ptr - sizeof(ChunkHeader));//Finds the location of the chunk header of the given chunk
     int aligned = checkIfAligned(currentChunkHeader);
     if(!aligned){
-        printf("free: invalid pointer (%s :%d)\n",file,line);
+        printf(stderr,"free: invalid pointer (%s :%d)\n",file,line);
         return;
     }
     //If the chunk isn't allocated
     if (currentChunkHeader->allocated==0){
-        printf("free: double free (%s :%d)\n", file, line);
+        printf(stderr,"free: double free (%s :%d)\n", file, line);
         return;
     }
 
