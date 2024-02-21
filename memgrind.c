@@ -92,8 +92,8 @@ long testD(int number_of_tests){
         int randNum = (rand() % 2); 
         if (randNum == 0) { 
             //Generate between 1 and 64.
-            int randSize = (rand() % 64) + 1; 
-            storage[allocatedNum] =  malloc(randNum);
+            size_t randSize = (rand() % 64) + 1; 
+            storage[allocatedNum] =  malloc(randSize);
             //Increment the number of times malloced
             mallocNum++; 
             allocatedNum++; //Increment number of allocated in array
@@ -163,11 +163,11 @@ long testE(int number_of_tests){
 
         }
 
-        printf("Test A time in microseconds: $ld\n", timeAVG(testA_time, iterations));
-        printf("Test B time in microseconds: $ld\n", timeAVG(testA_time, iterations));
-        printf("Test C time in microseconds: $ld\n", timeAVG(testA_time, iterations));
-        printf("Test D time in microseconds: $ld\n", timeAVG(testA_time, iterations));
-        printf("Test E time in microseconds: $ld\n", timeAVG(testA_time, iterations));
+        printf("Test A time in microseconds: %ld\n", timeAVG(testA_time, iterations));
+        printf("Test B time in microseconds: %ld\n", timeAVG(testA_time, iterations));
+        printf("Test C time in microseconds: %ld\n", timeAVG(testA_time, iterations));
+        printf("Test D time in microseconds: %ld\n", timeAVG(testA_time, iterations));
+        printf("Test E time in microseconds: %ld\n", timeAVG(testA_time, iterations));
 
     }
 
