@@ -13,7 +13,7 @@ typedef struct ChunkHeader{
 void initializeMallocArray(){
     //This chunk of code creates the first chunk header IF the test value is not correctly set.
     // I think we are allowed to do this because 
-    if (memory[0] !=0 && memory[1] !=0){
+    if (memory[0] ==0.0 && memory[1] ==0.0){
         ChunkHeader firstChunkHeader;
         firstChunkHeader.size = 509*8; //512  - 3 (For the first Chunk Header)
         firstChunkHeader.allocated = 0;
@@ -36,11 +36,16 @@ size_t round_up(size_t size) {
 
 
 ChunkHeader* find_free_chunk(size_t size){
-    ChunkHeader* current = (ChunkHeader*)((char*) &memory[1]);
-
-    while(current != NULL && !(current->allocated && current->size >= size)){
+    ChunkHeader* current = (ChunkHeader*)((char*) &memory[0]);
+    // current can't be null
+    // the size has to be more than the requested size
+    // has to be unallocated
+    while(current != NULL && (current->allocated == 1 || current->size < size)){
         current = current->nextChunkHeader;
     }
+    //while(current != NULL && !(current->allocated && current->size >= size)){
+      //  current = current->nextChunkHeader;
+    //}
     return current;
 }
 ChunkHeader* correctChunkSize(ChunkHeader* chunkHeader,size_t requestedSize){
@@ -54,16 +59,17 @@ ChunkHeader* correctChunkSize(ChunkHeader* chunkHeader,size_t requestedSize){
         newChunkHeader.allocated = 0;
         
         //Puts this chunkheader in the correct place in memory
-        ChunkHeader* addressForNewHeader = chunkHeader + (chunkHeader->size);
+        ChunkHeader* addressForNewHeader = (ChunkHeader* )(((char*)chunkHeader) + (chunkHeader->size)+sizeof(ChunkHeader));
         *addressForNewHeader = newChunkHeader;
 
-        chunkHeader->nextChunkHeader = &addressForNewHeader;
+        chunkHeader->nextChunkHeader = addressForNewHeader;
     }
     else{
         return chunkHeader;
     }
 }
-void * mymalloc(size_t size, char *file, int line){    //I changed the function definition so that it aligns with the way they are defined in mymalloc.h the file and line are used for error messages
+void* mymalloc(size_t size, char *file, int line){    //I changed the function definition so that it aligns with the way they are defined in mymalloc.h the file and line are used for error messages
+    double* memorylocation = &memory[0]; 
     initializeMallocArray();
     size = round_up(size);
     if(size <= 0){
@@ -77,64 +83,9 @@ void * mymalloc(size_t size, char *file, int line){    //I changed the function 
     }
     chunkHeader = correctChunkSize(chunkHeader,size);//If a chunk is too big this will shrink it to the correct size
     chunkHeader -> allocated = 1;
-    return(void*)( chunkHeader +sizeof(ChunkHeader));
-    /**
-     * I have no idea what this does what is sbrk
-     * 
-    chunk = (ChunkHeader*) sbrk(size * sizeof(ChunkHeader));
-    if(chunk == (void*) - 1){
-        fprintf(stderr, "Error at %s:%d: sbrk failed\n", file, line);
-        return NULL;
-
-    chunk->size = size;
-    chunk->free = 0;
-    chunk->nextChunkHeader = memory[0];
-
-    
-    return(void*)(chunk + 1);
-**/
-   
-    
-    //Read the first chunk header which starts at memory[0] (Should always be there because we called initialize)
-    //If the chunk header indicates that the chunk is allocated OR too small move to the next chunk header.
-    //      We can calculate the location of the next chunk header using the size of the next chunk (Which is stored in our current chunk header)
-    // Not sure what is supposed to happen if there is no chunks with enough space
-    //Once we find a suitable chunk indicate that it is now allocated its chunk header and return a pointer to the chunk
-/**
- * 
- * 
- * I was getting errors while compiling because I wanted to test something real quick so I just commented it out for now
-//loop intilaize 
-    int i = 0;
-    //pointer to array
-    char* ptr = &mArr[i]; 
-    //traverse
-   for(i; i < MEMLENGTH; i++){
-    //check to see if chunk is allocated and if it has enough size
-    if(mArr[i].allocated == 1 || mArr[i].size < size) {
-        continue;
-    }
-    // checks if there is enough size in the unallocated chunk
-    else if (size <= mArr[i]size){
-        myArr[i].allocated = 1;
-        //not sure if this is right
-        //subtract if there is more memory left?
-        mArr[i].size = size;
-        //ptr to chunk 
-        ptr = &mArr[i];
-        
-        return ptr;
-        
-    }
-    else{
-        return printf("There is not enough memory for size %d", size);
-
-    }
-
-   }
-**/
-
-
+    size_t sizeOfChunkHeader  = sizeof(ChunkHeader);
+    void* locationOfChunk = ((char*) chunkHeader + sizeOfChunkHeader);
+    return locationOfChunk;
 }
 void coalesce(){
     ChunkHeader *currentChunkHeader = &memory[1];
@@ -195,6 +146,16 @@ void myfree(void *ptr, char *file, int line){
 
 int main(int argc, char **argv)
 {
+    double* ptr = malloc(16);
+    double* ptr2 = malloc(16);
+    ptr[0] = 1.0;
+    ptr[1] = 2.0;
+    ptr2[0] = 3.0;
+    ptr2[1] = 3.0;
+    for(int i = 0; i < 500; i++){
+        printf("%f  ",memory[i]);
+    }
+    
     //malloc(-5);
-    printf("%d", sizeof(ChunkHeader));
+    //printf("%d", sizeof(ChunkHeader));
 }
